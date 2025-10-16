@@ -73,12 +73,10 @@ public:
         }
 
         std::string line;
-        size_t line_number = 0;
         while (std::getline(in, line)) {
             if (line.empty()) {
                 continue;
             }
-            ++line_number;
 
             std::vector<std::string> fields;
             std::istringstream iss(line);
@@ -88,7 +86,7 @@ public:
                 fields.push_back(value);
             }
 
-            process_func(line_number, fields);
+            process_func(fields);
         }
     }
 
