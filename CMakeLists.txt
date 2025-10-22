@@ -21,3 +21,4 @@ enable_testing()
 
 add_subdirectory(libs)
 add_subdirectory(lab_01)
+add_subdirectory(lab_02)
