@@ -3,7 +3,6 @@ add_executable(lab_01
 )
 
 target_sources(lab_01 PUBLIC
-        src/test.hpp
         src/CircleAreaExp.hpp
         src/RandomGeneratorExample.hpp
 )

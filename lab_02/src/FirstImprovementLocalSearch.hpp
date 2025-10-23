@@ -1,50 +1,111 @@
-//
-// Created by dcend on 22.10.2025.
-//
+#pragma once
+#include <vector>
+#include <random>
+#include <cmath>
+#include <algorithm>
+#include <numeric>
 
-#ifndef FIRSTIMPROVEMENTLOCALSEARCH_H
-#define FIRSTIMPROVEMENTLOCALSEARCH_H
-#include "LocalSearch.hpp"
-
-template<typename T>
-class FirstImprovementLocalSearch : public LocalSearch<T> {
+class FirstImprovementLocalSearch {
 public:
-  T find_solution(T starting_solution) override;
+    FirstImprovementLocalSearch(int dimensions,
+                                int bits_per_dim,
+                                int max_evaluations,
+                                double range_min,
+                                double range_max,
+                                int m_strength = 1)
+        : n(dimensions),
+          bits(bits_per_dim),
+          max_evals(max_evaluations),
+          min_range(range_min),
+          max_range(range_max),
+          m(m_strength),
+          eval_count(0) {
+        rng.seed(std::random_device{}());
+    }
 
-protected:
-  double evaluation_function(T solution) override;
+    std::vector<double> run_once(std::vector<double>& history);
 
-  std::vector<T> neighborhood_function(T solution) override;
+private:
+    int n;
+    int bits;
+    int max_evals;
+    double min_range, max_range;
+    int m;
+    int eval_count;
+    std::mt19937 rng;
 
-  bool is_stopping_condition_met(T solution) override;
+    double evaluation(const std::vector<int>& bits_vec);
+    std::vector<std::vector<int>> neighborhood(const std::vector<int>& bits_vec);
+    double decode_segment(const std::vector<int>& bits_vec, int start) const;
 };
 
-template<typename T>
-T FirstImprovementLocalSearch<T>::find_solution(T starting_solution) {
-  T best_solution = starting_solution;
-  do {
-    std::vector<T> neighborhood = neighborhood_function(best_solution);
-    for (int i = 0; i < neighborhood.size(); i++) {
-      T neighbor = neighborhood[i];
-      if (evaluation_function(neighbor) < evaluation_function(best_solution)) {
-        best_solution = neighbor;
-      }
+double FirstImprovementLocalSearch::decode_segment(const std::vector<int>& bits_vec, int start) const {
+    unsigned int value = 0;
+    for (int i = 0; i < bits; ++i)
+        value = (value << 1) | bits_vec[start + i];
+    double normalized = static_cast<double>(value) / ((1u << bits) - 1u);
+    return min_range + normalized * (max_range - min_range);
+}
+
+double FirstImprovementLocalSearch::evaluation(const std::vector<int>& bits_vec) {
+    ++eval_count;
+    double sum = 0.0;
+    for (int d = 0; d < n; ++d) {
+        double x = decode_segment(bits_vec, d * bits);
+        sum += x * x;
     }
-  } while (!is_stopping_condition_met(best_solution));
-  return best_solution;
+    return sum;
 }
 
-template<typename T>
-double FirstImprovementLocalSearch<T>::evaluation_function(T solution) {
+std::vector<std::vector<int>> FirstImprovementLocalSearch::neighborhood(const std::vector<int>& bits_vec) {
+    std::vector<std::vector<int>> neighbors;
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+    for (int j = 0; j < 16; ++j) {
+        std::vector<int> neighbor = bits_vec;
+        for (size_t b = 0; b < neighbor.size(); ++b)
+            if (dist(rng) < static_cast<double>(m) / 16.0)
+                neighbor[b] = 1 - neighbor[b];
+        neighbors.push_back(std::move(neighbor));
+    }
+    std::shuffle(neighbors.begin(), neighbors.end(), rng);
+    return neighbors;
 }
 
-template<typename T>
-std::vector<T> FirstImprovementLocalSearch<T>::neighborhood_function(T solution) {
+std::vector<double> FirstImprovementLocalSearch::run_once(std::vector<double>& history) {
+    std::vector<int> current(n * bits, 1);
+    eval_count = 0;
+    history.clear();
+    history.reserve(max_evals);
+
+    double best_val = evaluation(current);
+    history.push_back(best_val);
+
+    while (eval_count < max_evals) {
+        bool improved = false;
+        auto neighbors = neighborhood(current);
+
+        for (const auto& neighbor : neighbors) {
+            double val = evaluation(neighbor);
+            if (val < best_val) {
+                best_val = val;
+                current = neighbor;
+                improved = true;
+                break;
+            }
+            if (eval_count >= max_evals) break;
+        }
+
+        if (!history.empty())
+            history.push_back(std::min(history.back(), best_val));
+        else
+            history.push_back(best_val);
+
+        if (!improved) break;
+    }
+
+    while (history.size() < static_cast<size_t>(max_evals))
+        history.push_back(history.back());
+
+    return history;
 }
-
-template<typename T>
-bool FirstImprovementLocalSearch<T>::is_stopping_condition_met(T solution) {
-}
-
-
-#endif //FIRSTIMPROVEMENTLOCALSEARCH_H
