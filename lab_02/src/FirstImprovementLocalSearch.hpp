@@ -56,21 +56,30 @@ double FirstImprovementLocalSearch::evaluation(const std::vector<int>& bits_vec)
     }
     return sum;
 }
-
+/// @param bits_vec
+/// @return
 std::vector<std::vector<int>> FirstImprovementLocalSearch::neighborhood(const std::vector<int>& bits_vec) {
     std::vector<std::vector<int>> neighbors;
     std::uniform_real_distribution<double> dist(0.0, 1.0);
+    std::uniform_int_distribution<size_t> bit_dist(0, 15);
 
     for (int j = 0; j < 16; ++j) {
         std::vector<int> neighbor = bits_vec;
-        for (size_t b = 0; b < neighbor.size(); ++b)
-            if (dist(rng) < static_cast<double>(m) / 16.0)
-                neighbor[b] = 1 - neighbor[b];
+
+        for (int seg = 0; seg < n; ++seg) {
+            if (dist(rng) < m / 16.0) {
+                size_t bit_idx = bit_dist(rng);
+                neighbor[seg * bits + bit_idx] = 1 - neighbor[seg * bits + bit_idx];
+            }
+        }
+
         neighbors.push_back(std::move(neighbor));
     }
+
     std::shuffle(neighbors.begin(), neighbors.end(), rng);
     return neighbors;
 }
+
 
 std::vector<double> FirstImprovementLocalSearch::run_once(std::vector<double>& history) {
     std::vector<int> current(n * bits, 1);
