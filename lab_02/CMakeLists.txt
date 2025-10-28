@@ -3,7 +3,6 @@ add_executable(lab_02
 )
 
 target_sources(lab_02 PUBLIC
-        src/ILocalSearch.h
         src/FirstImprovementLocalSearch.hpp
 )
 
