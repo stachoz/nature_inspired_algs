@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/cmake,c++,linux,windows,clion
 # Edit at https://www.toptal.com/developers/gitignore?templates=cmake,c++,linux,windows,clion
 
+
+### Virtual env ###
+/venv/
+
 ### C++ ###
 # Prerequisites
 *.d

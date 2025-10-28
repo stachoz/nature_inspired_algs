@@ -33,6 +33,7 @@ private:
     int m;
     int eval_count;
     std::mt19937 rng;
+    constexpr int generate_neighbour_tries = 100;
 
     double evaluation(const std::vector<int>& bits_vec);
     std::vector<std::vector<int>> neighborhood(const std::vector<int>& bits_vec);
@@ -41,8 +42,9 @@ private:
 
 double FirstImprovementLocalSearch::decode_segment(const std::vector<int>& bits_vec, int start) const {
     unsigned int value = 0;
-    for (int i = 0; i < bits; ++i)
+    for (int i = 0; i < bits; ++i) {
         value = (value << 1) | bits_vec[start + i];
+    }
     double normalized = static_cast<double>(value) / ((1u << bits) - 1u);
     return min_range + normalized * (max_range - min_range);
 }
@@ -56,14 +58,13 @@ double FirstImprovementLocalSearch::evaluation(const std::vector<int>& bits_vec)
     }
     return sum;
 }
-/// @param bits_vec
-/// @return
+
 std::vector<std::vector<int>> FirstImprovementLocalSearch::neighborhood(const std::vector<int>& bits_vec) {
     std::vector<std::vector<int>> neighbors;
     std::uniform_real_distribution<double> dist(0.0, 1.0);
     std::uniform_int_distribution<size_t> bit_dist(0, 15);
 
-    for (int j = 0; j < 16; ++j) {
+    for (int j = 0; j < generate_neighbour_tries; ++j) {
         std::vector<int> neighbor = bits_vec;
 
         for (int seg = 0; seg < n; ++seg) {
@@ -79,7 +80,6 @@ std::vector<std::vector<int>> FirstImprovementLocalSearch::neighborhood(const st
     std::shuffle(neighbors.begin(), neighbors.end(), rng);
     return neighbors;
 }
-
 
 std::vector<double> FirstImprovementLocalSearch::run_once(std::vector<double>& history) {
     std::vector<int> current(n * bits, 1);
@@ -105,12 +105,16 @@ std::vector<double> FirstImprovementLocalSearch::run_once(std::vector<double>& h
             if (eval_count >= max_evals) break;
         }
 
-        if (!history.empty())
+        if (!history.empty()) {
             history.push_back(std::min(history.back(), best_val));
-        else
+        }
+        else {
             history.push_back(best_val);
+        }
 
-        if (!improved) break;
+        if (!improved) {
+            break;
+        }
     }
 
     while (history.size() < static_cast<size_t>(max_evals))

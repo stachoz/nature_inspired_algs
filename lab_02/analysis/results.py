@@ -19,6 +19,7 @@ for n in dimensions:
     plt.xlabel('Liczba ewaluacji')
     plt.ylabel('Wynik')
     plt.legend()
+    plt.xscale('log')
     plt.grid(True)
 
     output_file = os.path.join(BASE_DIR, f'local_search_n{n}.png')
