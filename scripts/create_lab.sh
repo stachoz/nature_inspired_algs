@@ -19,7 +19,7 @@ add_executable(${LAB_NAME}
 
 target_link_libraries(${LAB_NAME} PRIVATE common_libs)
 
-target_compile_definitions(lab_01 PRIVATE RESULTS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/results")
+target_compile_definitions(${LAB_NAME} PRIVATE RESULTS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/results")
 
 include(GoogleTest)
 EOF
