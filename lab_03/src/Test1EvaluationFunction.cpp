@@ -30,8 +30,10 @@ double Test1EvaluationFunction::evaluate(Solution *solution) {
   return value;
 }
 
-std::vector<double> &Test1EvaluationFunction::get_history() {
-  return history;
+std::vector<double> &Test1EvaluationFunction::get_history() { return history; }
+
+void Test1EvaluationFunction::clear_history() {
+    history.clear();
 }
 
 double Test1EvaluationFunction::calculate_value_for_binary_coding(std::vector<double> values) {

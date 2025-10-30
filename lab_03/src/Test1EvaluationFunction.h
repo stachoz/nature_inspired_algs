@@ -13,6 +13,7 @@ public:
 
   std::vector<double> &get_history();
 
+    void clear_history();
 private:
   static double calculate_value_for_binary_coding(std::vector<double> values);
 

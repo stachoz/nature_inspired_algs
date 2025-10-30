@@ -5,6 +5,7 @@
 #ifndef SOLUTION_H
 #define SOLUTION_H
 
+#include <cstddef>
 #include "vector"
 #include "EncodingType.h"
 
