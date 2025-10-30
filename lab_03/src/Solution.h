@@ -26,6 +26,8 @@ public:
 
   EncodingType get_encoding_type() const;
 
+  virtual void print() = 0;
+
 protected:
   size_t dimension;
   EncodingType encoding_type;

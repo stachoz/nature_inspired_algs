@@ -34,7 +34,7 @@ void LocalSearch::set_max_iterations(int max_iterations) {
 }
 
 bool LocalSearch::is_better(Solution *candidate_solution, Solution *current_best_solution) const {
-  if (minimalize) {
+  if (!minimalize) {
     return evaluation->evaluate(candidate_solution) <= evaluation->evaluate(current_best_solution);
   }
   return evaluation->evaluate(candidate_solution) > evaluation->evaluate(current_best_solution);

@@ -3,6 +3,7 @@
 //
 
 #include "BinarySolution.h"
+#include <iostream>
 
 BinarySolution::BinarySolution(size_t dimension, EncodingType encoding_type): Solution(dimension, encoding_type) {
   solution_vector.resize(dimension);
@@ -37,4 +38,13 @@ BinarySolution &BinarySolution::operator=(const BinarySolution &other) {
 
 BinarySolution::BinarySolution(const BinarySolution &other): Solution(other) {
   BinarySolution::operator=(other);
+}
+
+void BinarySolution::print() {
+  std::cout << "BinarySolution" << std::endl;
+  std::cout << "dimension: " << dimension << std::endl;
+  std::cout << "solution_vector: " << std::endl;
+  for (int i = 0; i < dimension; i++) {
+    std::cout << solution_vector[i] << std::endl;
+  }
 }

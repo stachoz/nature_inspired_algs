@@ -4,6 +4,9 @@
 
 #include "RealSolution.h"
 
+#include <iostream>
+#include <ostream>
+
 
 RealSolution::RealSolution(size_t dimension, EncodingType encoding_type): Solution(dimension, encoding_type) {
   solution_vector.resize(dimension);
@@ -19,6 +22,15 @@ void RealSolution::set_solution_vector(std::vector<double> solution_vector) {
 
 RealSolution::RealSolution(const RealSolution &other): Solution(other) {
   RealSolution::operator=(other);
+}
+
+void RealSolution::print() {
+  std::cout << "RealSolution" << std::endl;
+  std::cout << "dimension: " << dimension << std::endl;
+  std::cout << "solution_vector: " << std::endl;
+  for (int i = 0; i < dimension; i++) {
+    std::cout << solution_vector[i] << std::endl;
+  }
 }
 
 

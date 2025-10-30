@@ -17,6 +17,8 @@ add_executable(lab_03
         src/DefaultBinaryNeighborhood.h
         src/DefaultRealNeighborhood.cpp
         src/DefaultRealNeighborhood.h
+        src/Test1EvaluationFunction.cpp
+        src/Test1EvaluationFunction.h
 )
 
 target_link_libraries(lab_03 PRIVATE common_libs)

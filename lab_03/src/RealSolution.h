@@ -19,6 +19,8 @@ public:
 
   RealSolution(const RealSolution &other);
 
+  void print() override;
+
 protected:
   std::vector<double> solution_vector;
 };

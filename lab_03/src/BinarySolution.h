@@ -21,6 +21,8 @@ public:
 
   BinarySolution(const BinarySolution &other);
 
+  void print() override;
+
 protected:
   std::vector<uint16_t> solution_vector;
 };
