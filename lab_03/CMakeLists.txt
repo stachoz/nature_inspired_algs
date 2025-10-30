@@ -23,6 +23,8 @@ target_sources(lab_03 PRIVATE
     src/DefaultRealNeighborhood.h
         src/Test1EvaluationFunction.cpp
         src/Test1EvaluationFunction.h
+        src/Test2EvaluationFunction.cpp
+        src/Test2EvaluationFunction.h
 )
 
 target_link_libraries(lab_03 PRIVATE common_libs)

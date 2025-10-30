@@ -13,8 +13,8 @@ DefaultRealNeighborhood::DefaultRealNeighborhood(double min_dimension_value, dou
 }
 
 Solution *DefaultRealNeighborhood::get_neighbor(Solution *solution) {
-  RealSolution *real_solution = dynamic_cast<RealSolution *>(solution);
-  RealSolution *new_neighbor = new RealSolution(*real_solution);
+  auto *real_solution = dynamic_cast<RealSolution *>(solution);
+  auto *new_neighbor = new RealSolution(*real_solution);
 
   std::random_device rd;
   std::mt19937 gen(rd());

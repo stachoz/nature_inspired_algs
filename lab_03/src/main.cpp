@@ -7,6 +7,7 @@
 #include "RealSolution.h"
 #include "SimulatedAnnealing.h"
 #include "Test1EvaluationFunction.h"
+#include "Test2EvaluationFunction.h"
 
 // void test1ForBinary() {
 //   Test1EvaluationFunction *evaluation = new Test1EvaluationFunction();
@@ -72,12 +73,12 @@ int main() {
     std::cout << "lab_03 — Nature Inspired Algorithms" << std::endl;
     AlgorithmExperimentRunner runner {
                                     {10},
-                                    100,
+                                    1,
                                     10'000,
                                     -3,
                                     3,
-                                    std::make_unique<Test1EvaluationFunction>(),
-                                    std::make_unique<DefaultRealNeighborhood>(-3, 3)};
+                                    std::make_unique<Test2EvaluationFunction>(20,0.2,6.28),
+                                    std::make_unique<DefaultRealNeighborhood>(-32.768, 32.768)};
 
     runner.run("first");
 

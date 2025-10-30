@@ -7,7 +7,7 @@ LocalSearch::LocalSearch(Evaluation *evaluation, Neighborhood *neighborhood) {
   this->evaluation = evaluation;
   this->neighborhood = neighborhood;
   max_iterations = 10000;
-  minimalize = true;
+  minimalize = false;
 }
 
 LocalSearch::~LocalSearch() {
