@@ -36,7 +36,7 @@ void Test1EvaluationFunction::clear_history() {
     history.clear();
 }
 
-double Test1EvaluationFunction::calculate_value_for_binary_coding(std::vector<double> values) {
+double Test1EvaluationFunction::calculate_value_for_binary_coding(const std::vector<double>& values) {
   std::vector<double> decoded;
   decoded.reserve(values.size());
 
@@ -47,7 +47,7 @@ double Test1EvaluationFunction::calculate_value_for_binary_coding(std::vector<do
   return calculate_value_for_real_coding(decoded);
 }
 
-double Test1EvaluationFunction::calculate_value_for_grey_coding(std::vector<double> values) {
+double Test1EvaluationFunction::calculate_value_for_grey_coding(const std::vector<double>& values) {
   std::vector<double> decoded;
   decoded.reserve(values.size());
 
@@ -59,7 +59,7 @@ double Test1EvaluationFunction::calculate_value_for_grey_coding(std::vector<doub
   return calculate_value_for_real_coding(decoded);
 }
 
-double Test1EvaluationFunction::calculate_value_for_real_coding(std::vector<double> values) {
+double Test1EvaluationFunction::calculate_value_for_real_coding(const std::vector<double>& values) {
   double square_sum = 0.0;
   for (const double x: values)
     square_sum += x * x;

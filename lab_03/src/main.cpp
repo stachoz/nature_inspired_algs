@@ -70,7 +70,7 @@
 
 int main() {
     std::cout << "lab_03 — Nature Inspired Algorithms" << std::endl;
-    AlgorithmExperimentRunner runner {
+    AlgorithmExperimentRunner test1Real {
                                     {10},
                                     100,
                                     10'000,
@@ -78,8 +78,36 @@ int main() {
                                     3,
                                     std::make_unique<Test1EvaluationFunction>(),
                                     std::make_unique<DefaultRealNeighborhood>(-3, 3)};
+    test1Real.run("test1-real");
 
-    runner.run("first");
-
-    return 0;
+    // AlgorithmExperimentRunner test1Bin {
+    //                                 {10},
+    //                                 100,
+    //                                 10'000,
+    //                                 -3,
+    //                                 3,
+    //                                 std::make_unique<Test1EvaluationFunction>(),
+    //                                 std::make_unique<DefaultRealNeighborhood>(-3, 3)};
+    // test1Bin.run("test1-bin");
+    //
+    // AlgorithmExperimentRunner test2Real {
+    //                                 {10},
+    //                                 100,
+    //                                 10'000,
+    //                                 -3,
+    //                                 3,
+    //                                 std::make_unique<Test1EvaluationFunction>(),
+    //                                 std::make_unique<DefaultRealNeighborhood>(-3, 3)};
+    // test2Real.run("test2-real");
+    //
+    // AlgorithmExperimentRunner test2Bin {
+    //                                 {10},
+    //                                 100,
+    //                                 10'000,
+    //                                 -3,
+    //                                 3,
+    //                                 std::make_unique<Test1EvaluationFunction>(),
+    //                                 std::make_unique<DefaultRealNeighborhood>(-3, 3)};
+    // test2Bin.run("test2-bin");
+    // return 0;
 }

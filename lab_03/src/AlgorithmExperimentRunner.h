@@ -61,15 +61,19 @@ public:
         }
     }
 
-    void change_evaluation(std::unique_ptr<Test1EvaluationFunction> new_evaluation) {
+    void change_evaluation(std::unique_ptr<Evaluation> new_evaluation) {
         evaluation = std::move(new_evaluation);
+    }
+
+    void change_neighborhood(std::unique_ptr<Neighborhood> new_evaluation) {
+        neighborhood = std::move(new_evaluation);
     }
 
 private:
     std::vector<int> dimensions{};
     int runs;
     int evals;
-    std::unique_ptr<Test1EvaluationFunction> evaluation;
+    std::unique_ptr<Evaluation> evaluation;
     std::unique_ptr<Neighborhood> neighborhood;
-    std::unique_ptr<SimulatedAnnealing> simulated_annealing;
+    std::unique_ptr<LocalSearch> simulated_annealing;
 };
