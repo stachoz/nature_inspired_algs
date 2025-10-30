@@ -40,7 +40,7 @@
 void test1ForReal() {
   Test1EvaluationFunction *evaluation = new Test1EvaluationFunction();
   Neighborhood *neighborhood = new DefaultRealNeighborhood(-3, 3);
-  SimulatedAnnealing *simulated_annealing = new SimulatedAnnealing(evaluation, neighborhood, 10.0);
+  SimulatedAnnealing *simulated_annealing = new SimulatedAnnealing(evaluation, neighborhood, 1.0,0.95);
   Solution *start_solution = new RealSolution(10, EncodingType::Real);
 
   start_solution->set_solution_vector({3, 3, 3, 3, 3, 3, 3, 3, 3, 3});

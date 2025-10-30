@@ -5,11 +5,12 @@
 #include "SimulatedAnnealing.h"
 
 #include <iostream>
+#include <random>
 
 SimulatedAnnealing::SimulatedAnnealing(Evaluation *evaluation, Neighborhood *neighborhood,
-                                       double started_temperature): LocalSearch(
-                                                                      evaluation, neighborhood),
-                                                                    temperature(started_temperature) {
+                                       double started_temperature, double cooling_rate): LocalSearch(
+    evaluation, neighborhood),
+  temperature(started_temperature), cooling_rate(cooling_rate) {
 }
 
 Solution *SimulatedAnnealing::find_solution(Solution *starting_solution) {
@@ -36,9 +37,12 @@ bool SimulatedAnnealing::is_stopping_condition_met(Solution *solution) {
 }
 
 bool SimulatedAnnealing::is_hot_enough() {
-  return false; //todo to implement
+  std::mt19937 rng(std::random_device{}());
+  std::uniform_real_distribution<double> dist(0.0, 1.0);
+  double probability = temperature;
+  return dist(rng) < probability;
 }
 
 void SimulatedAnnealing::update_temperature() {
-  //todo to implement
+  temperature *= cooling_rate;
 }
