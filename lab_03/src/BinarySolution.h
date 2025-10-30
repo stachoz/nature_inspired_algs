@@ -9,7 +9,7 @@
 
 #include "Solution.h"
 
-class BinarySolution : Solution {
+class BinarySolution : public Solution {
 public:
   BinarySolution(size_t dimension, EncodingType encoding_type);
 
@@ -18,6 +18,8 @@ public:
   void set_solution_vector(std::vector<double> solution_vector) override;
 
   BinarySolution &operator=(const BinarySolution &other);
+
+  BinarySolution(const BinarySolution &other);
 
 protected:
   std::vector<uint16_t> solution_vector;

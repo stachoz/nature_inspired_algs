@@ -4,6 +4,8 @@
 
 #include "Solution.h"
 
+#include "BinarySolution.h"
+
 size_t Solution::get_dimension() const {
   return dimension;
 }
@@ -21,4 +23,8 @@ EncodingType Solution::get_encoding_type() const {
 Solution::Solution(size_t dimension, EncodingType encoding_type) {
   this->dimension = dimension;
   this->encoding_type = encoding_type;
+}
+
+Solution::Solution(const Solution &other) {
+  Solution::operator=(other);
 }

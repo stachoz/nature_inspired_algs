@@ -34,3 +34,7 @@ BinarySolution &BinarySolution::operator=(const BinarySolution &other) {
   }
   return *this;
 }
+
+BinarySolution::BinarySolution(const BinarySolution &other): Solution(other) {
+  BinarySolution::operator=(other);
+}

@@ -12,6 +12,8 @@ class Solution {
 public:
   Solution(size_t dimension, EncodingType encoding_type);
 
+  Solution(const Solution &other);
+
   virtual ~Solution() = default;
 
   virtual std::vector<double> get_solution_vector() = 0;
