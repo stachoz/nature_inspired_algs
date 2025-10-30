@@ -17,6 +17,8 @@ public:
 
   RealSolution &operator=(const RealSolution &other);
 
+  RealSolution(const RealSolution &other);
+
 protected:
   std::vector<double> solution_vector;
 };

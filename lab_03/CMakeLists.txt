@@ -15,6 +15,8 @@ add_executable(lab_03
         src/RealSolution.h
         src/DefaultBinaryNeighborhood.cpp
         src/DefaultBinaryNeighborhood.h
+        src/DefaultRealNeighborhood.cpp
+        src/DefaultRealNeighborhood.h
 )
 
 target_link_libraries(lab_03 PRIVATE common_libs)

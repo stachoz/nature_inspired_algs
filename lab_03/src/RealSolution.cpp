@@ -6,6 +6,7 @@
 
 
 RealSolution::RealSolution(size_t dimension, EncodingType encoding_type): Solution(dimension, encoding_type) {
+  solution_vector.resize(dimension);
 }
 
 void RealSolution::set_solution_vector(std::vector<double> solution_vector) {
@@ -14,6 +15,10 @@ void RealSolution::set_solution_vector(std::vector<double> solution_vector) {
   for (int i = 0; i < dimension; i++) {
     this->solution_vector[i] = solution_vector[i];
   }
+}
+
+RealSolution::RealSolution(const RealSolution &other): Solution(other) {
+  RealSolution::operator=(other);
 }
 
 
