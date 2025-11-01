@@ -1,26 +1,21 @@
-//
-// Created by dcend on 30.10.2025.
-//
+#pragma once
 
-#ifndef DEFAULTBINARYNEIGHBORHOOD_H
-#define DEFAULTBINARYNEIGHBORHOOD_H
 #include <cstdint>
+#include <random>
 
 #include "Neighborhood.h"
 
 
 class DefaultBinaryNeighborhood : public Neighborhood {
 public:
-  DefaultBinaryNeighborhood(int number_of_bits_to_manipulate, uint16_t min_dimension_value,
-                            uint16_t max_dimension_value);
+    DefaultBinaryNeighborhood(int number_of_bits_to_manipulate, uint16_t min_dimension_value,
+                              uint16_t max_dimension_value);
 
-  Solution *get_neighbor(Solution *solution) override;
+    Solution *get_neighbor(Solution *solution) override;
 
 private:
-  int number_of_bits_to_manipulate;
-  uint16_t min_dimension_value;
-  uint16_t max_dimension_value;
+    int number_of_bits_to_manipulate;
+    uint16_t min_dimension_value;
+    uint16_t max_dimension_value;
+    std::mt19937 gen{std::random_device{}()};
 };
-
-
-#endif //DEFAULTBINARYNEIGHBORHOOD_H

@@ -1,16 +1,10 @@
-//
-// Created by dcend on 29.10.2025.
-//
+#pragma once
 
-#ifndef NEIGHBORHOOD_H
-#define NEIGHBORHOOD_H
 #include "Solution.h"
 
 class Neighborhood {
 public:
-  virtual Solution *get_neighbor(Solution *solution) = 0;
+    virtual Solution *get_neighbor(Solution *solution) = 0;
 
-  virtual ~Neighborhood() = default;
+    virtual ~Neighborhood() = default;
 };
-
-#endif //NEIGHBORHOOD_H

@@ -1,14 +1,8 @@
-//
-// Created by dcend on 29.10.2025.
-//
-
-#ifndef ENCODINGTYPE_H
-#define ENCODINGTYPE_H
+#pragma once
 
 enum class EncodingType {
-  Binary,
-  Grey,
-  Real
+    Binary,
+    Grey,
+    Real
 };
 
-#endif //ENCODINGTYPE_H

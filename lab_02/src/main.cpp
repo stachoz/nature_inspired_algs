@@ -19,7 +19,7 @@ int main() {
 
     std::vector<int> dimensions = {2, 5, 10};
 
-    for (int n: dimensions) {
+    for (int n : dimensions) {
         std::cout << "Uruchamiam eksperyment dla n = " << n << "...\n";
         std::vector<double> avg_series(evals, 0.0);
 
@@ -27,8 +27,9 @@ int main() {
             FirstImprovementLocalSearch ls(n, bits, evals, minR, maxR, m);
             std::vector<double> history;
             ls.run_once(history);
-            for (int i = 0; i < evals; ++i)
+            for (int i = 0; i < evals; ++i) {
                 avg_series[i] += history[i];
+            }
         }
 
         for (double &v: avg_series) {

@@ -6,25 +6,11 @@
 
 #include "BinarySolution.h"
 
-size_t Solution::get_dimension() const {
-  return dimension;
-}
+size_t Solution::get_dimension() const { return dimension; }
 
-Solution &Solution::operator=(const Solution &other) {
-  dimension = other.dimension;
-  encoding_type = other.encoding_type;
-  return *this;
-}
-
-EncodingType Solution::get_encoding_type() const {
-  return encoding_type;
-}
+EncodingType Solution::get_encoding_type() const { return encoding_type; }
 
 Solution::Solution(size_t dimension, EncodingType encoding_type) {
-  this->dimension = dimension;
-  this->encoding_type = encoding_type;
-}
-
-Solution::Solution(const Solution &other) {
-  Solution::operator=(other);
+    this->dimension = dimension;
+    this->encoding_type = encoding_type;
 }
