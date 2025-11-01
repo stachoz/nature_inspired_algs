@@ -32,10 +32,9 @@ double Test1EvaluationFunction::evaluate(Solution *solution) {
 
 std::vector<double> &Test1EvaluationFunction::get_history() { return history; }
 
-void Test1EvaluationFunction::clear_hitory() {
+void Test1EvaluationFunction::clear_history() {
   history.clear();
 }
-
 
 double Test1EvaluationFunction::calculate_value_for_binary_coding(const std::vector<double>& values) {
   std::vector<double> decoded;

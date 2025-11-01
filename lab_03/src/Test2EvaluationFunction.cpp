@@ -41,7 +41,7 @@ std::vector<double> &Test2EvaluationFunction::get_history() {
   return history;
 }
 
-void Test2EvaluationFunction::clear_hitory() {
+void Test2EvaluationFunction::clear_history() {
   history.clear();
 }
 

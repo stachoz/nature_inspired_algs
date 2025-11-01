@@ -14,11 +14,12 @@ class AlgorithmExperimentRunner {
 public:
   AlgorithmExperimentRunner(const std::vector<int> &dimensions, int runs, int evals, int start_temp, int cooling_rate,
                             std::unique_ptr<Evaluation> evaluation,
-                            std::unique_ptr<DefaultRealNeighborhood> neighborhood) : dimensions(dimensions),
-    runs(runs),
-    evals(evals),
-    evaluation(std::move(evaluation)),
-    neighborhood(std::move(neighborhood)) {
+                            std::unique_ptr<DefaultRealNeighborhood> neighborhood,
+                            double max_dim_val) : dimensions(dimensions),
+                                                  runs(runs),
+                                                  evals(evals),
+                                                  evaluation(std::move(evaluation)),
+                                                  neighborhood(std::move(neighborhood)), max_dim_value(max_dim_val) {
     simulated_annealing = std::make_unique<SimulatedAnnealing>(
       this->evaluation.get(),
       this->neighborhood.get(),
@@ -34,7 +35,7 @@ public:
       CSVFile csv_file(std::string(RESULTS_DIR) + "/" + filename.data() + "_" + std::to_string(dim) + ".csv");
 
       std::shared_ptr<Solution> start_solution = std::make_shared<RealSolution>(dim, EncodingType::Real);
-      start_solution->set_solution_vector(std::vector(dim, 32.768));
+      start_solution->set_solution_vector(std::vector(dim, max_dim_value));
 
       for (int i = 0; i < runs; i++) {
         [[maybe_unused]] Solution *best_solution = simulated_annealing->find_solution(start_solution.get());
@@ -50,7 +51,7 @@ public:
         for (double &val: avg_series) {
           val /= runs;
         }
-        evaluation->clear_hitory();
+        evaluation->clear_history();
       }
 
       for (int i = 0; i < evals; i++) {
@@ -63,11 +64,16 @@ public:
     evaluation = std::move(new_evaluation);
   }
 
+  void change_neighborhood(std::unique_ptr<Neighborhood> new_evaluation) {
+    neighborhood = std::move(new_evaluation);
+  }
+
 private:
   std::vector<int> dimensions{};
   int runs;
   int evals;
+  double max_dim_value;
   std::unique_ptr<Evaluation> evaluation;
   std::unique_ptr<Neighborhood> neighborhood;
-  std::unique_ptr<SimulatedAnnealing> simulated_annealing;
+  std::unique_ptr<LocalSearch> simulated_annealing;
 };

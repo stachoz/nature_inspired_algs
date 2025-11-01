@@ -13,7 +13,7 @@ public:
 
   std::vector<double> &get_history() override;
 
-  void clear_hitory() override;
+  void clear_history() override;
 
 private:
   static double calculate_value_for_binary_coding(const std::vector<double>& values);

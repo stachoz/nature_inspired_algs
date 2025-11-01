@@ -70,17 +70,31 @@
 // }
 
 int main() {
-    std::cout << "lab_03 — Nature Inspired Algorithms" << std::endl;
-    AlgorithmExperimentRunner runner {
-                                    {10},
-                                    1,
-                                    10'000,
-                                    -3,
-                                    3,
-                                    std::make_unique<Test2EvaluationFunction>(20,0.2,6.28),
-                                    std::make_unique<DefaultRealNeighborhood>(-32.768, 32.768)};
+  std::cout << "lab_03 — Nature Inspired Algorithms" << std::endl;
+  // AlgorithmExperimentRunner runner{
+  //   {10},
+  //   1,
+  //   10'000,
+  //   -3,
+  //   3,
+  //   std::make_unique<Test1EvaluationFunction>(),
+  //   std::make_unique<DefaultRealNeighborhood>(-3, 3), 3
+  // };
+  //
+  // runner.run("test1-real");
+  //
+  AlgorithmExperimentRunner runner2{
+    {10},
+    100,
+    10'000,
+    -3,
+    3,
+    std::make_unique<Test2EvaluationFunction>(20, 0.2, 6.28),
+    std::make_unique<DefaultRealNeighborhood>(-32.768, 32.768), 32.768
+  };
 
-    runner.run("first");
 
-    return 0;
+  runner2.run("test2-real");
+
+  return 0;
 }
