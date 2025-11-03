@@ -1,6 +1,5 @@
 #pragma once
-
-#include "Solution.h"
+#include "solutions/Solution.h"
 
 class Neighborhood {
 public:

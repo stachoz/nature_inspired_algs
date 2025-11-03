@@ -4,28 +4,29 @@ add_executable(lab_03
 
 target_sources(lab_03 PRIVATE
     src/AlgorithmExperimentRunner.h
-    src/Evaluation.h
+    src/AlgorithmExperimentRunner.cpp
     src/LocalSearch.h
-    src/Neighborhood.h
-    src/Solution.h
     src/SimulatedAnnealing.cpp
     src/SimulatedAnnealing.h
     src/LocalSearch.cpp
-    src/EncodingType.h
-    src/Solution.cpp
-    src/BinarySolution.cpp
-    src/BinarySolution.h
-    src/RealSolution.cpp
-    src/RealSolution.h
-    src/DefaultBinaryNeighborhood.cpp
-    src/DefaultBinaryNeighborhood.h
-    src/DefaultRealNeighborhood.cpp
-    src/DefaultRealNeighborhood.h
-        src/Test1EvaluationFunction.cpp
-        src/Test1EvaluationFunction.h
-        src/Test2EvaluationFunction.cpp
-        src/Test2EvaluationFunction.h
+    src/solutions/Solution.h
+    src/solutions/BinarySolution.cpp
+    src/solutions/BinarySolution.h
+    src/solutions/RealSolution.cpp
+    src/solutions/RealSolution.h
+    src/neighborhood/Neighborhood.h
+    src/neighborhood/DefaultBinaryNeighborhood.cpp
+    src/neighborhood/DefaultBinaryNeighborhood.h
+    src/neighborhood/DefaultRealNeighborhood.h
+    src/neighborhood/DefaultRealNeighborhood.cpp
+    src/evaluation/Evaluation.h
+    src/evaluation/Test1EvaluationFunction.cpp
+    src/evaluation/Test1EvaluationFunction.h
+    src/evaluation/Test2EvaluationFunction.cpp
+    src/evaluation/Test2EvaluationFunction.h
 )
+
+target_include_directories(lab_03 PRIVATE src)
 
 target_link_libraries(lab_03 PRIVATE common_libs)
 

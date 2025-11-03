@@ -5,6 +5,7 @@
 
 class DefaultRealNeighborhood : public Neighborhood {
 public:
+    // FIXME neighborhood does not need domain
     DefaultRealNeighborhood(double min_dimension_value, double max_dimension_value);
 
     Solution *get_neighbor(Solution *solution) override;

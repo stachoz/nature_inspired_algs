@@ -1,15 +1,12 @@
 #include "LocalSearch.h"
 
-LocalSearch::LocalSearch(Evaluation *evaluation, Neighborhood *neighborhood) {
+#include <iostream>
+
+LocalSearch::LocalSearch(Evaluation *evaluation, Neighborhood *neighborhood, int eval_num) {
     this->evaluation = evaluation;
     this->neighborhood = neighborhood;
-    max_iterations = 10000; // TODO
+    max_eval = eval_num;
     minimalize = false;
-}
-
-LocalSearch::~LocalSearch() {
-    delete evaluation;
-    delete neighborhood;
 }
 
 void LocalSearch::set_evaluation(Evaluation *evaluation) {
@@ -24,8 +21,10 @@ void LocalSearch::set_neighborhood(Neighborhood *neighborhood) {
 
 void LocalSearch::set_minimalize(bool minimalize) { this->minimalize = minimalize; }
 
-void LocalSearch::set_max_iterations(int max_iterations) { this->max_iterations = max_iterations; }
+void LocalSearch::set_max_eval(int max_iterations) { this->max_eval = max_iterations; }
 
+
+// FIXME evaluation function masn't be used here.
 bool LocalSearch::is_better(Solution *candidate_solution, Solution *current_best_solution) const {
     if (!minimalize) {
         return evaluation->evaluate(candidate_solution) <= evaluation->evaluate(current_best_solution);
@@ -33,4 +32,7 @@ bool LocalSearch::is_better(Solution *candidate_solution, Solution *current_best
     return evaluation->evaluate(candidate_solution) > evaluation->evaluate(current_best_solution);
 }
 
-bool LocalSearch::is_max_iterations_reached(int interation) const { return interation >= max_iterations; }
+bool LocalSearch::is_max_iterations_reached() const {
+    std::cout << evaluation->get_eval_counter() << std::endl;
+    return evaluation->get_eval_counter() >= max_eval;
+}
