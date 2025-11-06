@@ -10,7 +10,7 @@ int main() {
     AlgorithmExperimentRunner runner2{{10},
                                       100,
                                       10'000,
-                                      3,
+                                      100,
                                       0.95,
                                       std::make_unique<Test2EvaluationFunction>(20, 0.2, 6.28),
                                       std::make_unique<DefaultRealNeighborhood>(-32.768, 32.768),

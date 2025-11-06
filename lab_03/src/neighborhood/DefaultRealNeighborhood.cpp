@@ -1,4 +1,8 @@
 #include "DefaultRealNeighborhood.h"
+
+#include <iostream>
+#include <mutex>
+
 #include "solutions/RealSolution.h"
 
 DefaultRealNeighborhood::DefaultRealNeighborhood(double min_dimension_value, double max_dimension_value) {
@@ -17,7 +21,20 @@ Solution *DefaultRealNeighborhood::get_neighbor(Solution *solution) {
     size_t dimension = 0;
 
     dimension = dimension_distribution(gen);
-    solution_vector[dimension] = solution_vector[dimension] + normal_distribution(gen);
+
+    double new_dimension_value = solution_vector[dimension] + normal_distribution(gen);
+
+    if (new_dimension_value > max_dimension_value) {
+        double excess = new_dimension_value - max_dimension_value;
+        new_dimension_value = max_dimension_value - excess;
+    }
+    else if (new_dimension_value < min_dimension_value) {
+        double excess = min_dimension_value - new_dimension_value;
+        new_dimension_value = min_dimension_value + excess;
+    }
+
+
+    solution_vector[dimension] = new_dimension_value;
 
     return new_neighbor;
 }

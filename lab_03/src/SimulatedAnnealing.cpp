@@ -15,6 +15,7 @@ Solution *SimulatedAnnealing::find_solution(Solution *starting_solution) {
         if (is_better(candidate_solution, best_solution) || is_hot_enough()) {
             best_solution = candidate_solution;
         }
+
         update_temperature();
     } while (!is_max_iterations_reached());
 

@@ -24,6 +24,6 @@ void BinarySolution::set_solution_vector(const std::vector<uint16_t> &vec) { sol
 
 std::vector<uint16_t> &BinarySolution::get_solution_vector_ref() { return solution_vector; }
 
-void BinarySolution::init_with_max_value(int dimensions) {
+void BinarySolution::init_with_value(int dimensions, double value) {
     solution_vector = std::vector<uint16_t>(dimensions, std::numeric_limits<uint16_t>::max());
 }

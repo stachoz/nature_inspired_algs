@@ -11,7 +11,7 @@ public:
 
     std::vector<double>& get_solution_vector_ref();
 
-    void init_with_max_value(int dimensions) override;
+    void init_with_value(int dimensions, double value) override;
 
 private:
     std::vector<double> solution_vector;

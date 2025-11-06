@@ -23,13 +23,18 @@ void LocalSearch::set_minimalize(bool minimalize) { this->minimalize = minimaliz
 
 void LocalSearch::set_max_eval(int max_iterations) { this->max_eval = max_iterations; }
 
-
-// FIXME evaluation function masn't be used here.
 bool LocalSearch::is_better(Solution *candidate_solution, Solution *current_best_solution) const {
-    if (!minimalize) {
-        return evaluation->evaluate(candidate_solution) <= evaluation->evaluate(current_best_solution);
+    double candidate_eval = evaluation->evaluate(candidate_solution);
+    auto last_value = evaluation->get_last_eval_value();
+
+    if(last_value.has_value()) {
+        if(!minimalize) {
+            return candidate_eval <= last_value.value();
+        }
+        return candidate_eval >= last_value.value();
     }
-    return evaluation->evaluate(candidate_solution) > evaluation->evaluate(current_best_solution);
+
+    return true;
 }
 
 bool LocalSearch::is_max_iterations_reached() const {

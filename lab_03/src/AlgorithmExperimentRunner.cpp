@@ -27,7 +27,7 @@ void AlgorithmExperimentRunner::run(std::string_view filename) {
         std::filesystem::path output = std::filesystem::path(RESULTS_DIR) / (std::string(filename) + "_" + std::to_string(dim) + ".csv");
         CSVFile csv_file(output);
 
-        start_solution->init_with_max_value(dim);
+        start_solution->init_with_value(dim, max_dim_value);
 
         for (int i = 0; i < runs; i++) {
             [[maybe_unused]] Solution *best_solution = simulated_annealing->find_solution(start_solution.get());

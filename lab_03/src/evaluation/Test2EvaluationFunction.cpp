@@ -13,7 +13,7 @@ double Test2EvaluationFunction::evaluate(Solution *solution) {
     increase_counter();
 
     // FIXME passing domain
-    std::vector<double> real_solution_vec = solution->get_real_representation({{-32.768, 32.768}});
+    std::vector<double> real_solution_vec = solution->get_real_representation(std::nullopt);
 
     const size_t d = real_solution_vec.size();
     double sum_sq = 0.0;
