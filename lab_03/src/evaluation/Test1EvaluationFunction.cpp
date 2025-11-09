@@ -5,7 +5,7 @@
 double Test1EvaluationFunction::evaluate(Solution *solution) {
     increase_counter();
 
-    std::vector<double> real_solution_vec = solution->get_real_representation({});
+    std::vector<double> real_solution_vec = solution->get_real_representation();
 
     double square_sum = 0.0;
     for (const double x : real_solution_vec) {

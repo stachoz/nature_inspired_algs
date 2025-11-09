@@ -10,9 +10,10 @@ DefaultRealNeighborhood::DefaultRealNeighborhood(double min_dimension_value, dou
     this->max_dimension_value = max_dimension_value;
 }
 
-Solution *DefaultRealNeighborhood::get_neighbor(Solution *solution) {
-    auto *real_solution = dynamic_cast<RealSolution *>(solution);
-    auto *new_neighbor = new RealSolution(*real_solution);
+std::shared_ptr<Solution> DefaultRealNeighborhood::get_neighbor(std::shared_ptr<Solution> solution) {
+
+    auto *real_solution = dynamic_cast<RealSolution *>(solution.get());
+    auto new_neighbor = std::make_shared<RealSolution>(*real_solution);
 
     std::uniform_int_distribution<size_t> dimension_distribution(0, real_solution->get_solution_vector_ref().size() - 1);
     std::normal_distribution<double> normal_distribution(0, 1);

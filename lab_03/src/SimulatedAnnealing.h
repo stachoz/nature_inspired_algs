@@ -9,17 +9,18 @@
 
 class SimulatedAnnealing : public LocalSearch {
 public:
-    SimulatedAnnealing(Evaluation *evaluation, Neighborhood *neighborhood, double started_temperature,
-                       double cooling_rate, int eval_num);
+    SimulatedAnnealing(std::shared_ptr<Evaluation> eval, std::shared_ptr<Neighborhood> neighborhood,
+                       std::shared_ptr<Solution> start_sol, double started_temperature, double cooling_rate,
+                       int eval_num);
 
-    Solution *find_solution(Solution *starting_solution) override;
+    std::shared_ptr<Solution> find_solution() override;
 
 protected:
     bool is_stopping_condition_met(Solution *solution) override;
 
     void update_temperature();
 
-    bool is_hot_enough() const;
+    bool is_hot_enough(double x, double y) const;
 
     double temperature;
     double cooling_rate;

@@ -1,44 +1,95 @@
 #include "AlgorithmExperimentRunner.h"
 
 #include "evaluation/Evaluation.h"
+#include "evaluation/Test1EvaluationFunction.h"
+#include "evaluation/Test2EvaluationFunction.h"
+#include "neighborhood/DefaultBinaryNeighborhood.h"
+#include "neighborhood/DefaultRealNeighborhood.h"
 #include "neighborhood/Neighborhood.h"
+#include "solutions/BinarySolution.h"
 #include "solutions/RealSolution.h"
 
-AlgorithmExperimentRunner::AlgorithmExperimentRunner(const std::vector<int> &dimensions, int runs, int evals,
-                                                     int start_temp, double cooling_rate,
-                                                     std::unique_ptr<Evaluation> evaluation,
-                                                     std::unique_ptr<Neighborhood> neighborhood,
-                                                     std::unique_ptr<Solution> solution,
-                                                     double max_dim_val) :  dimensions(dimensions),
-                                                                            runs(runs),
-                                                                            evals(evals),
-                                                                            max_dim_value(max_dim_val),
-                                                                            evaluation(std::move(evaluation)),
-                                                                            neighborhood(std::move(neighborhood)),
-                                                                            start_solution(std::move(solution)) {
-    simulated_annealing = std::make_unique<SimulatedAnnealing>(this->evaluation.get(),
-        this->neighborhood.get(),start_temp, cooling_rate, evals);
+void AlgorithmExperimentRunner::run() const {
+    std::pair<double, double> test1_domain = {-3, 3};
+    std::pair<double, double> test2_domain = {-32.768, 32.768};
+
+    std::shared_ptr<Evaluation> test1_eval = std::make_shared<Test1EvaluationFunction>();
+    std::shared_ptr<Evaluation> test2_eval = std::make_shared<Test2EvaluationFunction>(20, 0.2, 6.28);
+
+    std::shared_ptr<Neighborhood> bin_ngh1 = std::make_shared<DefaultBinaryNeighborhood>(16, test1_domain.first, test1_domain.second);
+    std::shared_ptr<Neighborhood> real_ngh1 = std::make_shared<DefaultRealNeighborhood>(test1_domain.first, test1_domain.second);
+
+    std::shared_ptr<Neighborhood> bin_ngh2 = std::make_shared<DefaultBinaryNeighborhood>(16, test2_domain.first, test2_domain.second);
+    std::shared_ptr<Neighborhood> real_ngh2 = std::make_shared<DefaultRealNeighborhood>(test2_domain.first, test2_domain.second);
+
+    std::shared_ptr<Solution> start_bin_sol = std::make_shared<BinarySolution>(test1_domain);
+    std::shared_ptr<Solution> start_real_sol = std::make_shared<RealSolution>(test1_domain);
+
+    std::shared_ptr<Solution> start_bin_sol2 = std::make_shared<BinarySolution>(test2_domain);
+    std::shared_ptr<Solution> start_real_sol2 = std::make_shared<RealSolution>(test2_domain);
+
+    std::unique_ptr<LocalSearch> ls_test1_real = std::make_unique<SimulatedAnnealing>(
+            test1_eval,
+            real_ngh1,
+            start_real_sol,
+            100,
+            0.98,
+            10'000);
+
+    perform(std::move(ls_test1_real), "test1-real");
+
+    std::unique_ptr<LocalSearch> ls_test1_bin = std::make_unique<SimulatedAnnealing>(
+            test1_eval,
+            bin_ngh1,
+            start_bin_sol,
+            100,
+            0.98,
+            10'000);
+
+    perform(std::move(ls_test1_bin), "test1-bin");
+
+    std::unique_ptr<LocalSearch> ls_test2_real = std::make_unique<SimulatedAnnealing>(
+            test2_eval,
+            real_ngh2,
+            start_real_sol2,
+            100,
+            0.98,
+            10'000);
+
+    perform(std::move(ls_test2_real), "test2-real");
+
+    std::unique_ptr<LocalSearch> ls_test2_bin = std::make_unique<SimulatedAnnealing>(
+            test2_eval,
+            bin_ngh2,
+            start_bin_sol2,
+            700,
+            0.98,
+            10'000);
+
+    perform(std::move(ls_test2_bin), "test2-bin");
 }
 
-void AlgorithmExperimentRunner::run(std::string_view filename) {
-    std::vector avg_series(evals, 0.0);
+void AlgorithmExperimentRunner::perform(std::unique_ptr<LocalSearch> local_search, std::string_view filename) const {
 
-    for (int dim : dimensions) {
-        std::filesystem::path output = std::filesystem::path(RESULTS_DIR) / (std::string(filename) + "_" + std::to_string(dim) + ".csv");
+    for (int dim: dimensions) {
+        std::vector avg_series(evals, 0.0);
+
+        std::filesystem::path output =
+                std::filesystem::path(RESULTS_DIR) / (std::string(filename) + "_" + std::to_string(dim) + ".csv");
         CSVFile csv_file(output);
 
-        start_solution->init_with_value(dim, max_dim_value);
+        local_search->get_starting_solution()->fit_to_dim(dim);
 
         for (int i = 0; i < runs; i++) {
-            [[maybe_unused]] Solution *best_solution = simulated_annealing->find_solution(start_solution.get());
+            [[maybe_unused]] auto best_solution = local_search->find_solution();
 
-            auto evaluation_history = evaluation->get_history();
+            auto evaluation_history = local_search->get_evaluation()->get_history();
 
             for (int j = 0; j < evals; j++) {
                 avg_series[j] += evaluation_history[j];
             }
 
-            evaluation->clear_state();
+            local_search->get_evaluation()->clear_state();
         }
 
         for (double &val: avg_series) {
@@ -49,11 +100,4 @@ void AlgorithmExperimentRunner::run(std::string_view filename) {
             csv_file.append_row(i, avg_series[i]);
         }
     }
-}
-void AlgorithmExperimentRunner::change_evaluation(std::unique_ptr<Evaluation> new_evaluation) {
-    evaluation = std::move(new_evaluation);
-}
-
-void AlgorithmExperimentRunner::change_neighborhood(std::unique_ptr<Neighborhood> new_neighborhood) {
-    neighborhood = std::move(new_neighborhood);
 }

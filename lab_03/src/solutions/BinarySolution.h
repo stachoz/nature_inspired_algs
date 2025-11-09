@@ -8,14 +8,21 @@
 
 class BinarySolution : public Solution {
 public:
-    std::vector<double> get_real_representation(const std::optional<std::pair<double, double>> &domain) override;
+    explicit BinarySolution(const std::pair<double, double>& func_domain) {
+        domain = func_domain;
+    }
 
-    void set_solution_vector(const std::vector<uint16_t> &vec);
+    std::vector<double> get_real_representation() override;
 
-    std::vector<uint16_t> &get_solution_vector_ref();
+    void fit_to_dim(int dim) override {
+        solution_vector = std::vector<uint16_t>(dim, std::numeric_limits<uint16_t>::max());
+    }
 
-    void init_with_value(int dimensions, double value) override;
+    std::vector<uint16_t>& get_solution_vector_ref() {
+        return solution_vector;
+    }
 
 private:
     std::vector<uint16_t> solution_vector;
+    std::pair<double, double> domain;
 };

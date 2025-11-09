@@ -9,9 +9,9 @@ dimensions = [10]
 
 results_dir = os.path.join(BASE_DIR, "..", "results")
 files = [
-    # os.path.join(results_dir, "test1-bin_10"),
-    #os.path.join(results_dir, "test1-real_10"),
-    # os.path.join(results_dir, "test2-bin_10"),
+    os.path.join(results_dir, "test1-bin_10"),
+    os.path.join(results_dir, "test1-real_10"),
+    os.path.join(results_dir, "test2-bin_10"),
     os.path.join(results_dir, "test2-real_10"),
 ]
 

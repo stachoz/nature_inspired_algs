@@ -33,7 +33,7 @@ private:
     int m;
     int eval_count;
     std::mt19937 rng;
-    constexpr int generate_neighbour_tries = 100;
+    int generate_neighbour_tries = 100;
 
     double evaluation(const std::vector<int>& bits_vec);
     std::vector<std::vector<int>> neighborhood(const std::vector<int>& bits_vec);

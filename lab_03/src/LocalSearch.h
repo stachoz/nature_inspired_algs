@@ -5,28 +5,37 @@
 
 class LocalSearch {
 public:
-    LocalSearch(Evaluation *evaluation, Neighborhood *neighborhood, int eval_num);
+    LocalSearch(std::shared_ptr<Evaluation> evaluation,
+                std::shared_ptr<Neighborhood> neighborhood,
+                std::shared_ptr<Solution> solution,
+                int max_evaluation_num) : evaluation(std::move(evaluation)),
+                                                      neighborhood(std::move(neighborhood)),
+                                                      starting_solution(std::move(solution)),
+                                                      max_eval(max_evaluation_num)  {};
 
-    virtual Solution *find_solution(Solution *starting_solution) = 0;
+    virtual std::shared_ptr<Solution> find_solution() = 0;
 
     virtual ~LocalSearch() = default;
-
-    void set_evaluation(Evaluation *evaluation);
-
-    void set_neighborhood(Neighborhood *neighborhood);
 
     void set_minimalize(bool minimalize);
 
     void set_max_eval(int max_iterations);
 
+    Evaluation *get_evaluation() const;
+
+    std::shared_ptr<Solution> get_starting_solution() const {
+        return starting_solution;
+    }
 
 protected:
-    Evaluation *evaluation;
-    Neighborhood *neighborhood;
-    bool minimalize;
-    int max_eval;
+    std::shared_ptr<Evaluation> evaluation;
+    std::shared_ptr<Neighborhood> neighborhood;
+    std::shared_ptr<Solution> starting_solution;
 
-    bool is_better(Solution *candidate_solution, Solution *current_best_solution) const;
+    bool minimalize = true;
+    int max_eval = 10'000;
+
+    bool is_better(double candidate_evaluation, double current_best_evaluation) const;
 
     bool is_max_iterations_reached() const;
 

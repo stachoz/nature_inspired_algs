@@ -10,29 +10,12 @@
 #include "solutions/Solution.h"
 
 
-class Evaluation;
 class AlgorithmExperimentRunner {
 public:
-    AlgorithmExperimentRunner(const std::vector<int> &dimensions, int runs, int evals, int start_temp, double cooling_rate,
-                              std::unique_ptr<Evaluation> evaluation,
-                              std::unique_ptr<Neighborhood> neighborhood,
-                              std::unique_ptr<Solution> solution,
-                              double max_dim_val);
-
-
-    void run(std::string_view filename);
-
-    void change_evaluation(std::unique_ptr<Evaluation> new_evaluation);
-
-    void change_neighborhood(std::unique_ptr<Neighborhood> new_neighborhood);
-
+    void run() const;
+    void perform(std::unique_ptr<LocalSearch> local_search, std::string_view filename) const;
 private:
-    std::vector<int> dimensions{};
-    int runs;
-    int evals;
-    double max_dim_value;
-    std::unique_ptr<Evaluation> evaluation;
-    std::unique_ptr<Neighborhood> neighborhood;
-    std::unique_ptr<Solution> start_solution;
-    std::unique_ptr<LocalSearch> simulated_annealing;
+    int evals = 10000;
+    int runs = 100;
+    std::vector<int> dimensions {10};
 };
