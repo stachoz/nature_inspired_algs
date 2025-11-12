@@ -2,6 +2,15 @@ add_library(common_libs STATIC
         CSVFile.h
         random/RandomGenerator.hpp
         random/RandomGenerator.tpp
+        evaluation/Evaluation.h
+        evaluation/Test1EvaluationFunction.cpp
+        evaluation/Test1EvaluationFunction.h
+        evaluation/Test2EvaluationFunction.cpp
+        evaluation/Test2EvaluationFunction.h
+        solutions/BinarySolution.cpp
+        solutions/BinarySolution.h
+        solutions/RealSolution.cpp
+        solutions/RealSolution.h
 )
 
 # Prevents from linker error. Without this CMake fails for header-only files in lib.
