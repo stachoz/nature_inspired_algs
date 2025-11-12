@@ -19,3 +19,7 @@ std::vector<double> RealSolution::get_real_representation() {
 
     return result;
 }
+
+Solution* RealSolution::clone() const{
+    return new RealSolution(*this);
+}

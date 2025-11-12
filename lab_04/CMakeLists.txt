@@ -1,6 +1,6 @@
 add_executable(lab_04
     src/main.cpp
-    src/genetic_genetic.h
+    src/GeneticAlgorithm.h
 )
 
 target_link_libraries(lab_04 PRIVATE common_libs)

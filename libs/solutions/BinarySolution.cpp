@@ -17,3 +17,7 @@ std::vector<double> BinarySolution::get_real_representation() {
 
     return result;
 }
+
+Solution* BinarySolution::clone() const{
+    return new BinarySolution(*this);
+}

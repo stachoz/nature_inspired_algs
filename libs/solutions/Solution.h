@@ -8,5 +8,7 @@ public:
     virtual std::vector<double> get_real_representation() = 0;
     virtual void fit_to_dim(int dim) = 0;
     virtual ~Solution() = default;
+    virtual Solution* clone() const = 0;
+
 };
 
