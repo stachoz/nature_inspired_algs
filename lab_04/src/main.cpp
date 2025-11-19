@@ -48,7 +48,10 @@ int main() {
         std::filesystem::path output = std::filesystem::path(RESULTS_DIR) / (exp.name + ".csv");
         CSVFile csv_file(output);
 
-        std::vector<double> avg_series(evals, 0.0);
+        std::vector<double> avg_series (evals, 0.0);
+
+        std::vector<double> last_in_series {};
+        last_in_series.reserve(evals);
 
         for (int r = 0; r < runs; r++) {
             f1_real_start->fit_to_dim(dim);
@@ -62,8 +65,16 @@ int main() {
             auto best = ga.find_solution();
 
             auto history = exp.eval->get_history();
-            for (int i = 0; i < evals && i < history.size(); i++) {
-                avg_series[i] += history[i];
+
+            std::vector<double> best_series(evals, 0.0);
+            double best_so_far = std::numeric_limits<double>::infinity();
+
+            for (int i = 0; i < evals; i++) {
+                double val = (i < history.size() ? history[i] : best_so_far);
+                best_so_far = std::min(best_so_far, val);
+                best_series[i] = best_so_far;
+
+                avg_series[i] += best_so_far;
             }
         }
 
