@@ -48,7 +48,7 @@ int main() {
         std::filesystem::path output = std::filesystem::path(RESULTS_DIR) / (exp.name + ".csv");
         CSVFile csv_file(output);
 
-        std::vector<double> avg_series (evals, 0.0);
+        std::vector<std::vector<double>> raw_data (evals, std::vector<double>(runs));
 
         std::vector<double> last_in_series {};
         last_in_series.reserve(evals);
@@ -72,18 +72,13 @@ int main() {
             for (int i = 0; i < evals; i++) {
                 double val = (i < history.size() ? history[i] : best_so_far);
                 best_so_far = std::min(best_so_far, val);
-                best_series[i] = best_so_far;
 
-                avg_series[i] += best_so_far;
+                raw_data[i][r] = best_so_far;
             }
         }
 
-        for (auto &v : avg_series) {
-            v /= runs;
-        }
-
         for (int i = 0; i < evals; i++) {
-            csv_file.append_row(i, avg_series[i]);
+            csv_file.append_vector_as_row(raw_data[i]);
         }
     }
 

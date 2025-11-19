@@ -58,6 +58,21 @@ public:
         file << '\n';
     }
 
+    template <typename T>
+    void append_vector_as_row(const std::vector<T>& v) {
+        if (!file.is_open()) {
+            throw std::runtime_error("CSVFile::append: file is not open");
+        }
+
+        for (size_t i = 0; i < v.size(); i++) {
+            file << v[i];
+            if (i + 1 < v.size()) {
+                file << ',';
+            }
+        }
+        file << '\n';
+    }
+
     void close_file() {
         std::lock_guard lock(mutex);
         if (file.is_open()) {
