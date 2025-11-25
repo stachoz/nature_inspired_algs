@@ -7,6 +7,12 @@ add_library(common_libs STATIC
         evaluation/Test1EvaluationFunction.h
         evaluation/Test2EvaluationFunction.cpp
         evaluation/Test2EvaluationFunction.h
+        evaluation/GeneralizedRosenbrock.cpp
+        evaluation/GeneralizedRosenbrock.h
+        evaluation/Salomon.cpp
+        evaluation/Salomon.h
+        evaluation/Whitley.cpp
+        evaluation/Whitley.h
         solutions/BinarySolution.cpp
         solutions/BinarySolution.h
         solutions/RealSolution.cpp
