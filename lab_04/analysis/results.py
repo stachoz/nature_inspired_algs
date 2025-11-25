@@ -5,14 +5,13 @@ import pandas as pd
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 RUN_NUM = 100 # amount of independent algorithm runs - size of row
-dimensions = [10]
+dimensions = [15]
 
 results_dir = os.path.join(BASE_DIR, "..", "results")
 files = [
-    os.path.join(results_dir, "F1_bin"),
     os.path.join(results_dir, "F1_real"),
-    os.path.join(results_dir, "F2_bin"),
-    os.path.join(results_dir, "F2_real")
+    os.path.join(results_dir, "F2_real"),
+    os.path.join(results_dir, "F3_real")
 ]
 
 for file in files:

@@ -1,12 +1,13 @@
+#include <filesystem>
 #include <iostream>
 #include <memory>
-#include <filesystem>
-#include "solutions/RealSolution.h"
-#include "solutions/BinarySolution.h"
-#include "evaluation/Test1EvaluationFunction.h"
-#include "evaluation/Test2EvaluationFunction.h"
-#include "GeneticAlgorithm.h"
 #include "CSVFile.h"
+#include "GeneticAlgorithm.h"
+#include "evaluation/GeneralizedRosenbrock.h"
+#include "evaluation/Salomon.h"
+#include "evaluation/Whitley.h"
+#include "solutions/BinarySolution.h"
+#include "solutions/RealSolution.h"
 
 int main() {
     std::cout << "Lab 04 — Nature Inspired Algorithms: Genetic Algorithm\n";
@@ -15,19 +16,20 @@ int main() {
 
     const int evals = 10000;
     const int runs = 100;
-    const int dim = 10;
+    const int dim = 15;
     const int population_size = 50;
 
-    auto f1_eval = std::make_shared<Test1EvaluationFunction>();
-    auto f2_eval = std::make_shared<Test2EvaluationFunction>(20, 0.2, 6.28);
+    auto f1_eval = std::make_shared<GeneralizedRosenbrock>();
+    auto f2_eval = std::make_shared<Salomon>();
+    auto f3_eval = std::make_shared<Whitley>();
 
-    std::pair<double,double> f1_domain = {-3,3};
-    std::pair<double,double> f2_domain = {-32.768,32.768};
+    std::pair<double, double> f1_domain = {-30, 30};
+    std::pair<double, double> f2_domain = {-100, 100};
+    std::pair<double, double> f3_domain = {-10.24, 10.24};
 
     auto f1_real_start = std::make_shared<RealSolution>(f1_domain);
-    auto f1_bin_start  = std::make_shared<BinarySolution>(f1_domain);
     auto f2_real_start = std::make_shared<RealSolution>(f2_domain);
-    auto f2_bin_start  = std::make_shared<BinarySolution>(f2_domain);
+    auto f3_real_start = std::make_shared<RealSolution>(f3_domain);
 
     struct Experiment {
         std::string name;
@@ -35,29 +37,25 @@ int main() {
         std::shared_ptr<Solution> start_sol;
     };
 
-    std::vector<Experiment> experiments = {
-        {"F1_real", f1_eval, f1_real_start},
-        {"F1_bin",  f1_eval, f1_bin_start},
-        {"F2_real", f2_eval, f2_real_start},
-        {"F2_bin",  f2_eval, f2_bin_start}
-    };
+    std::vector<Experiment> experiments = {{"F1_real", f1_eval, f1_real_start},
+                                           {"F2_real", f2_eval, f2_real_start},
+                                           {"F3_real", f3_eval, f3_real_start}};
 
-    for (auto &exp : experiments) {
+    for (auto &exp: experiments) {
         std::cout << "Running experiment: " << exp.name << std::endl;
 
         std::filesystem::path output = std::filesystem::path(RESULTS_DIR) / (exp.name + ".csv");
         CSVFile csv_file(output);
 
-        std::vector<std::vector<double>> raw_data (evals, std::vector<double>(runs));
+        std::vector<std::vector<double>> raw_data(evals, std::vector<double>(runs));
 
-        std::vector<double> last_in_series {};
+        std::vector<double> last_in_series{};
         last_in_series.reserve(evals);
 
         for (int r = 0; r < runs; r++) {
             f1_real_start->fit_to_dim(dim);
-            f1_bin_start->fit_to_dim(dim);
             f2_real_start->fit_to_dim(dim);
-            f2_bin_start->fit_to_dim(dim);
+            f3_real_start->fit_to_dim(dim);
 
             exp.eval->clear_state();
 
