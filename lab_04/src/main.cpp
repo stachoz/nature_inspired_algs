@@ -1,82 +1,91 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <numeric>
+
 #include "CSVFile.h"
 #include "GeneticAlgorithm.h"
 #include "evaluation/GeneralizedRosenbrock.h"
 #include "evaluation/Salomon.h"
 #include "evaluation/Whitley.h"
-#include "solutions/BinarySolution.h"
 #include "solutions/RealSolution.h"
+
+
+const std::vector<int> DIMENSIONS = {5, 15, 30};
+const int RUNS = 100;
+const int BASE_EVALS = 10000;
+const int POPULATION_SIZE = 50;
+
+struct Experiment {
+    std::string name;
+    std::shared_ptr<Evaluation> eval;
+    std::shared_ptr<RealSolution> start_sol;
+    std::pair<double, double> domain;
+};
 
 int main() {
     std::cout << "Lab 04 — Nature Inspired Algorithms: Genetic Algorithm\n";
 
     std::filesystem::create_directories(RESULTS_DIR);
 
-    const int evals = 10000;
-    const int runs = 100;
-    const int dim = 15;
-    const int population_size = 50;
-
     auto f1_eval = std::make_shared<GeneralizedRosenbrock>();
-    auto f2_eval = std::make_shared<Salomon>();
-    auto f3_eval = std::make_shared<Whitley>();
-
-    std::pair<double, double> f1_domain = {-30, 30};
-    std::pair<double, double> f2_domain = {-100, 100};
-    std::pair<double, double> f3_domain = {-10.24, 10.24};
-
+    std::pair<double, double> f1_domain = {-30, 30}; // [cite: 66]
     auto f1_real_start = std::make_shared<RealSolution>(f1_domain);
+
+    auto f2_eval = std::make_shared<Salomon>();
+    std::pair<double, double> f2_domain = {-100, 100}; // [cite: 67]
     auto f2_real_start = std::make_shared<RealSolution>(f2_domain);
+
+    auto f3_eval = std::make_shared<Whitley>();
+    std::pair<double, double> f3_domain = {-10.24, 10.24}; // [cite: 68]
     auto f3_real_start = std::make_shared<RealSolution>(f3_domain);
 
-    struct Experiment {
-        std::string name;
-        std::shared_ptr<Evaluation> eval;
-        std::shared_ptr<Solution> start_sol;
+    std::vector<Experiment> experiments_template = {
+        {"A.1.3_Rosenbrock", f1_eval, f1_real_start, f1_domain},
+        // {"A.2.4_Salomon", f2_eval, f2_real_start, f2_domain},
+        // {"A.2.5_Whitley", f3_eval, f3_real_start, f3_domain}
     };
 
-    std::vector<Experiment> experiments = {{"F1_real", f1_eval, f1_real_start},
-                                           {"F2_real", f2_eval, f2_real_start},
-                                           {"F3_real", f3_eval, f3_real_start}};
+    for (int dim : DIMENSIONS) {
+        int evals = BASE_EVALS * dim;
 
-    for (auto &exp: experiments) {
-        std::cout << "Running experiment: " << exp.name << std::endl;
+        std::cout << "\n--- Running experiments for dim = " << dim << " (MaksF = " << evals << ") ---\n";
 
-        std::filesystem::path output = std::filesystem::path(RESULTS_DIR) / (exp.name + ".csv");
-        CSVFile csv_file(output);
+        for (auto &exp : experiments_template) {
+            std::cout << "  Running experiment: " << exp.name << std::endl;
 
-        std::vector<std::vector<double>> raw_data(evals, std::vector<double>(runs));
+            std::string filename = exp.name + "_dim" + std::to_string(dim) + ".csv";
+            std::filesystem::path output = std::filesystem::path(RESULTS_DIR) / filename;
+            CSVFile csv_file(output);
 
-        std::vector<double> last_in_series{};
-        last_in_series.reserve(evals);
+            std::vector<std::vector<double>> raw_data(evals, std::vector<double>(RUNS));
 
-        for (int r = 0; r < runs; r++) {
-            f1_real_start->fit_to_dim(dim);
-            f2_real_start->fit_to_dim(dim);
-            f3_real_start->fit_to_dim(dim);
+            for (int r = 0; r < RUNS; r++) {
+                exp.start_sol->fit_to_dim(dim);
 
-            exp.eval->clear_state();
+                exp.eval->clear_state();
 
-            GeneticAlgorithm ga(exp.eval, exp.start_sol, population_size);
-            auto best = ga.find_solution();
+                GeneticAlgorithm ga(exp.eval, exp.start_sol, POPULATION_SIZE, evals);
+                auto best = ga.find_solution();
+                auto history = exp.eval->get_history();
 
-            auto history = exp.eval->get_history();
+                double best_so_far = std::numeric_limits<double>::infinity();
 
-            std::vector<double> best_series(evals, 0.0);
-            double best_so_far = std::numeric_limits<double>::infinity();
+                for (int i = 0; i < evals; i++) {
+                    double val = (i < history.size() ? history[i] : best_so_far);
+
+                    best_so_far = std::min(best_so_far, val);
+
+                    raw_data[i][r] = best_so_far;
+                }
+            }
 
             for (int i = 0; i < evals; i++) {
-                double val = (i < history.size() ? history[i] : best_so_far);
-                best_so_far = std::min(best_so_far, val);
-
-                raw_data[i][r] = best_so_far;
+                csv_file.append_vector_as_row(raw_data[i]);
             }
-        }
-
-        for (int i = 0; i < evals; i++) {
-            csv_file.append_vector_as_row(raw_data[i]);
         }
     }
 
