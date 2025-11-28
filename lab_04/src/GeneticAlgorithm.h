@@ -15,9 +15,8 @@
 
 class GeneticAlgorithm {
 public:
-    GeneticAlgorithm(std::shared_ptr<Evaluation> eval, std::shared_ptr<Solution> start_solution,
-                     int population_size = 50, double crossover_prob = 0.9, double mutation_prob = 0.1,
-                     int tournament_size = 3, int max_evaluations = 10000);
+
+    GeneticAlgorithm(std::shared_ptr<Evaluation> eval, std::shared_ptr<Solution> start_solution, int population_size, int max_evaluations);
 
     std::shared_ptr<Solution> find_solution();
 
@@ -26,9 +25,9 @@ private:
     std::vector<std::shared_ptr<Solution>> population;
     std::unordered_map<Solution*, double> fitness;
     int population_size;
-    double crossover_prob;
-    double mutation_prob;
-    int tournament_size;
+    double crossover_prob = 0.9;
+    double mutation_prob = 0.1;
+    int tournament_size = 3;
     int max_evaluations;
     int dimension;
 

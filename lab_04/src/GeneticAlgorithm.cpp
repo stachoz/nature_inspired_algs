@@ -1,14 +1,10 @@
 #include "GeneticAlgorithm.h"
 
 GeneticAlgorithm::GeneticAlgorithm(std::shared_ptr<Evaluation> eval, std::shared_ptr<Solution> start_solution,
-                                   int population_size, double crossover_prob, double mutation_prob,
-                                   int tournament_size, int max_evaluations) :
-    evaluation(eval), population_size(population_size), crossover_prob(crossover_prob), mutation_prob(mutation_prob),
-    tournament_size(tournament_size), max_evaluations(max_evaluations) {
+    int population_size, int max_evaluations) : evaluation(eval), population_size(population_size), max_evaluations(max_evaluations) {
     dimension = start_solution->get_real_representation().size();
     init_population(start_solution);
 }
-
 std::shared_ptr<Solution> GeneticAlgorithm::find_solution() {
     evaluate_population(population);
 
@@ -35,6 +31,8 @@ std::shared_ptr<Solution> GeneticAlgorithm::find_solution() {
             return fitness[a.get()] < fitness[b.get()];
         });
         auto best_solution = *best_it;
+
+        evaluation->add_to_history(fitness[best_solution.get()]);
 
         population = offspring;
         population[0] = best_solution;
@@ -79,12 +77,6 @@ void GeneticAlgorithm::evaluate_population(std::vector<std::shared_ptr<Solution>
         }
         double val = evaluation->evaluate(sol.get());
         fitness[sol.get()] = val;
-
-        if (evaluation->get_history().empty() || val < evaluation->get_history().back()) {
-            evaluation->add_to_history(val);
-        } else {
-            evaluation->add_to_history(evaluation->get_history().back());
-        }
     }
 }
 
