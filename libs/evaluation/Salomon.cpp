@@ -13,5 +13,7 @@ double Salomon::evaluate(Solution *solution) {
         sum_sq += v * v;
     const double r = std::sqrt(sum_sq);
     const double result = 1.0 - std::cos(2.0 * M_PI * r) + 0.1 * r;
+
+    add_to_history(result);
     return result;
 }

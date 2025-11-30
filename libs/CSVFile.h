@@ -8,6 +8,9 @@
 #include <vector>
 #include <filesystem>
 #include <stdexcept>
+#include <locale>
+#include <iomanip>
+#include <algorithm>
 
 class CSVFile {
 public:
@@ -47,13 +50,56 @@ public:
         }
     }
 
+    template<typename T>
+    std::string format_field(const T& value) {
+        if constexpr (std::is_floating_point_v<T>) {
+            std::stringstream ss;
+            ss.imbue(std::locale("pl_PL.UTF-8"));
+            ss << std::fixed << std::setprecision(10) << value;
+            return ss.str();
+        } else {
+            std::stringstream ss;
+            ss << value;
+            return ss.str();
+        }
+    }
+
+    std::string format_field(const double& value) {
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(10) << value;
+        std::string result = ss.str();
+
+        std::replace(result.begin(), result.end(), '.', ',');
+
+        return result;
+    }
+
+    template<typename T, typename = std::enable_if_t<!std::is_floating_point_v<T>>>
+    std::string format_field(const T& value) {
+        std::stringstream ss;
+        ss << value;
+        return ss.str();
+    }
+
+
     template<typename... Args>
     void append_row(const Args&... args) {
         std::lock_guard lock(mutex);
         if (!file.is_open()) {
             throw std::runtime_error("CSVFile::append: file is not open: " + file_path.string());
         }
-        ((file << args <<','), ...);
+
+        auto write_field = [this](const auto& arg) {
+            if constexpr (std::is_floating_point_v<std::decay_t<decltype(arg)>>) {
+                 file << format_field(arg);
+            } else {
+                 file << arg;
+            }
+            file << ';';
+        };
+
+        (write_field(args), ...);
+
         file.seekp(-1, std::ios::cur);
         file << '\n';
     }
@@ -65,23 +111,27 @@ public:
         }
 
         for (size_t i = 0; i < v.size(); i++) {
-            file << v[i];
+            if constexpr (std::is_floating_point_v<T>) {
+                file << format_field(v[i]);
+            } else {
+                file << v[i];
+            }
+
             if (i + 1 < v.size()) {
-                file << ',';
+                file << ';';
             }
         }
         file << '\n';
     }
 
     void close_file() {
-        std::lock_guard lock(mutex);
         if (file.is_open()) {
             file.close();
         }
     }
 
     template<typename Func>
-    void process_data(Func&& process_func, char delimiter = ',') const {
+    void process_data(Func&& process_func, char delimiter = ';') const {
         std::ifstream in(file_path);
         if (!in.is_open()) {
             throw std::runtime_error("CSVFile::process_data: cannot open file: " + file_path.string());

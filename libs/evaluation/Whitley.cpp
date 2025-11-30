@@ -17,5 +17,7 @@ double Whitley::evaluate(Solution *solution) {
             sum += (y * y) / 4000.0 - std::cos(y) + 1.0;
         }
     }
+
+    add_to_history(sum);
     return sum;
 }

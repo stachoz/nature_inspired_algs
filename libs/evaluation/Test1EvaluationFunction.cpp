@@ -1,6 +1,7 @@
 #include "Test1EvaluationFunction.h"
-#include "solutions/Solution.h"
 #include <cmath>
+#include <iostream>
+#include "solutions/Solution.h"
 
 double Test1EvaluationFunction::evaluate(Solution *solution) {
     increase_counter();

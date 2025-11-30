@@ -31,9 +31,6 @@ std::shared_ptr<Solution> GeneticAlgorithm::find_solution() {
             return fitness[a.get()] < fitness[b.get()];
         });
         auto best_solution = *best_it;
-
-        evaluation->add_to_history(fitness[best_solution.get()]);
-
         population = offspring;
         population[0] = best_solution;
     }

@@ -13,5 +13,7 @@ double GeneralizedRosenbrock::evaluate(Solution *solution) {
         double term2 = x[j] - 1.0;
         sum += 100.0 * term1 * term1 + term2 * term2;
     }
+
+    add_to_history(sum);
     return sum;
 }
