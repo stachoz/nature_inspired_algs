@@ -1,10 +1,12 @@
 #include "GeneticAlgorithm.h"
 
-GeneticAlgorithm::GeneticAlgorithm(std::shared_ptr<Evaluation> eval, std::shared_ptr<Solution> start_solution,
-    int population_size, int max_evaluations) : evaluation(eval), population_size(population_size), max_evaluations(max_evaluations) {
+GeneticAlgorithm::GeneticAlgorithm(std::shared_ptr<Evaluation> eval, std::shared_ptr<Solution> start_solution, const Alg_params& alg_params)
+                                    : evaluation(eval) {
     dimension = start_solution->get_real_representation().size();
+    set_alg_params(alg_params);
     init_population(start_solution);
 }
+
 std::shared_ptr<Solution> GeneticAlgorithm::find_solution() {
     evaluate_population(population);
 

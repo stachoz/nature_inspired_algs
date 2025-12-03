@@ -18,8 +18,6 @@
 
 const std::vector<int> DIMENSIONS = {5, 15, 30};
 const int RUNS = 100;
-const int BASE_EVALS = 10000;
-const int POPULATION_SIZE = 50;
 
 struct Experiment {
     std::string name;
@@ -27,6 +25,43 @@ struct Experiment {
     std::shared_ptr<RealSolution> start_sol;
     std::pair<double, double> domain;
 };
+
+GeneticAlgorithm::Alg_params get_params_for_experiment(const Experiment& experiment, int dim) {
+    GeneticAlgorithm::Alg_params params {};
+    params.max_evaluations = 10000 * dim;
+
+    if (experiment.name == "rosenbrock") {
+
+    }
+    else if (experiment.name == "salomon") {
+        params.population_size = 50;
+        params.crossover_prob = 0.9;
+        params.mutation_prob = 0.1;
+        params.tournament_size = 3;
+    }
+    else if (experiment.name == "whitley") {
+        if (dim == 5) {
+            params.population_size = 50;
+            params.crossover_prob = 0.9;
+            params.mutation_prob = 0.1;
+            params.tournament_size = 3;
+        }
+        else if (dim == 15) {
+            params.population_size = 250;
+            params.crossover_prob = 0.95;
+            params.mutation_prob = 0.07;
+            params.tournament_size = 5;
+        }
+        else if (dim == 30) {
+            params.population_size = 750;
+            params.crossover_prob = 0.98;
+            params.mutation_prob = 0.03;
+            params.tournament_size = 6;
+        }
+    }
+
+    return params;
+}
 
 int main() {
     std::cout << "Lab 04 — Nature Inspired Algorithms: Genetic Algorithm\n";
@@ -52,8 +87,7 @@ int main() {
     };
 
     for (int dim : DIMENSIONS) {
-        int evals = BASE_EVALS * dim;
-        std::cout << "\n--- Running experiments for dim = " << dim << " (MaksF = " << evals << ") ---\n";
+        std::cout << "\n--- Running experiments for dim = " << dim << std::endl;
 
         for (auto &exp : experiments_template) {
             std::cout << "  Running experiment: " << exp.name << std::endl;
@@ -62,19 +96,23 @@ int main() {
             std::filesystem::path output = std::filesystem::path(RESULTS_DIR) / filename;
             CSVFile csv_file(output);
 
-            std::vector<std::vector<double>> raw_data(evals, std::vector<double>(RUNS));
+            auto exp_params = get_params_for_experiment(exp, dim);
+
+            std::vector<std::vector<double>> raw_data(exp_params.max_evaluations, std::vector<double>(RUNS));
 
             for (int r = 0; r < RUNS; r++) {
                 exp.start_sol->fit_to_dim(dim);
                 exp.eval->clear_state();
 
-                GeneticAlgorithm ga(exp.eval, exp.start_sol, POPULATION_SIZE, evals);
+                GeneticAlgorithm ga(exp.eval, exp.start_sol, exp_params);
+
                 auto best = ga.find_solution();
+
                 auto history = exp.eval->get_history();
 
                 double best_so_far = std::numeric_limits<double>::infinity();
 
-                for (int i = 0; i < evals; i++) {
+                for (int i = 0; i < exp_params.max_evaluations; i++) {
                     double val = (i < history.size() ? history[i] : best_so_far);
 
                     best_so_far = std::min(best_so_far, val);
@@ -83,7 +121,7 @@ int main() {
                 }
             }
 
-            for (int i = 0; i < evals; i++) {
+            for (int i = 0; i < exp_params.max_evaluations; i++) {
                 csv_file.append_vector_as_row(raw_data[i]);
             }
         }

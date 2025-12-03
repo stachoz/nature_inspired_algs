@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <iostream>
 #include <memory>
 #include <random>
 #include <unordered_map>
@@ -15,19 +14,35 @@
 
 class GeneticAlgorithm {
 public:
+    struct Alg_params {
+        int population_size;
+        double crossover_prob;
+        double mutation_prob;
+        int tournament_size;
+        int max_evaluations;
+    };
 
-    GeneticAlgorithm(std::shared_ptr<Evaluation> eval, std::shared_ptr<Solution> start_solution, int population_size, int max_evaluations);
+    GeneticAlgorithm(std::shared_ptr<Evaluation> eval, std::shared_ptr<Solution> start_solution,
+        const Alg_params& parms);
 
     std::shared_ptr<Solution> find_solution();
 
+
+    void set_alg_params(const Alg_params& params) {
+        population_size = params.population_size;
+        crossover_prob = params.crossover_prob;
+        mutation_prob = params.mutation_prob;
+        tournament_size = params.tournament_size;
+        max_evaluations = params.max_evaluations;
+    }
 private:
     std::shared_ptr<Evaluation> evaluation;
     std::vector<std::shared_ptr<Solution>> population;
     std::unordered_map<Solution*, double> fitness;
     int population_size;
-    double crossover_prob = 0.9;
-    double mutation_prob = 0.1;
-    int tournament_size = 3;
+    double crossover_prob;
+    double mutation_prob;
+    int tournament_size;
     int max_evaluations;
     int dimension;
 

@@ -91,9 +91,9 @@ public:
 
         auto write_field = [this](const auto& arg) {
             if constexpr (std::is_floating_point_v<std::decay_t<decltype(arg)>>) {
-                 file << format_field(arg);
+                file << format_field(arg);
             } else {
-                 file << arg;
+                file << arg;
             }
             file << ';';
         };
