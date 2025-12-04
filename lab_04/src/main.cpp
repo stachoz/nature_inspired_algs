@@ -38,6 +38,12 @@ GeneticAlgorithm::Alg_params get_params_for_experiment(const Experiment& experim
         params.crossover_prob = 0.9;
         params.mutation_prob = 0.1;
         params.tournament_size = 3;
+        else if (dim == 30) {
+            params.population_size = 250;
+            params.crossover_prob = 0.9;
+            params.mutation_prob = 0.1;
+            params.tournament_size = 4;
+        }
     }
     else if (experiment.name == "whitley") {
         if (dim == 5) {
