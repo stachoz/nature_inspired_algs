@@ -31,7 +31,10 @@ GeneticAlgorithm::Alg_params get_params_for_experiment(const Experiment& experim
     params.max_evaluations = 10000 * dim;
 
     if (experiment.name == "rosenbrock") {
-
+        params.population_size = 50;
+        params.crossover_prob = 0.9;
+        params.mutation_prob = 0.1;
+        params.tournament_size = 3;
     }
     else if (experiment.name == "salomon") {
         params.population_size = 50;
@@ -82,8 +85,8 @@ int main() {
 
     std::vector<Experiment> experiments_template = {
                                                     {"rosenbrock", f1_eval, f1_real_start, f1_domain},
-                                                    {"salomon", f2_eval, f2_real_start, f2_domain},
-                                                    {"whitley", f3_eval, f3_real_start, f3_domain}
+                                                    // {"salomon", f2_eval, f2_real_start, f2_domain},
+                                                    // {"whitley", f3_eval, f3_real_start, f3_domain}
     };
 
     for (int dim : DIMENSIONS) {
