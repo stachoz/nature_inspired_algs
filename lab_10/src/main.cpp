@@ -138,7 +138,19 @@ void run_experiment(std::string name, int dim) {
     std::filesystem::path file_path = std::filesystem::path(RESULTS_DIR) / (name + "_dim" + std::to_string(dim) + ".csv");
     std::ofstream out(file_path);
     out << "iteration,f1,f2\n";
-    double ec = (name == "ZDT4") ? 10.0 : ETA_C_DEF, em = (name == "ZDT4") ? 10.0 : ETA_M_DEF;
+
+    double ec = ETA_C_DEF;
+    double em = ETA_M_DEF;
+
+    if (name == "ZDT3") {
+        ec = 10.0;
+    } else if (name == "ZDT4") {
+        ec = 5.0;
+        em = 5.0;
+    } else if (name == "ZDT6") {
+        em = 50.0;
+    }
+
     std::vector<Individual> P;
     for (int i = 0; i < POP_SIZE; ++i) {
         Individual ind(dim);
